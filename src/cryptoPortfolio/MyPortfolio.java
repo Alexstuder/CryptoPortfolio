@@ -1,9 +1,8 @@
-package cryptoPortfolio.portfolio;
+package cryptoPortfolio;
 
 import java.text.ParseException;
 
-import cryptoPortfolio.exchange.MyExchanges;
-import cryptoPortfolio.wallet.MyWallets;
+import cryptoPortfolio.portfolio.PortfolioPosition;
 
 public class MyPortfolio {
 
@@ -22,7 +21,7 @@ public class MyPortfolio {
 		MyWallets myWallets = new MyWallets();
         myWallets.listAllWallets();
         
-        for (Position position : myWallets.getRates(myExchanges)) {
+        for (PortfolioPosition position : myWallets.getRates(myExchanges)) {
 
         	System.out.println(position.toString());
 		}

@@ -2,9 +2,9 @@ package cryptoPortfolio.exchange;
 
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.EnumSet;
+import java.util.HashMap;
 
-import cryptoPortfolio.exchange.liveCoin.CryptoCoinOnLiveCoin;
+import cryptoPortfolio.crypotcoinlist.CryptoCoinList;
 
 
 public interface Exchange {
@@ -21,11 +21,12 @@ public interface Exchange {
 	// Methods
 	public BigDecimal getLastSellPrice(String currencyPair);
 	public URL getURLLastTade(String currencyPair);
-	public String getCurrencyPair(CryptoCoin first ,CryptoCoin second);
-	public EnumSet<CryptoCoinOnLiveCoin> getAllCryptoCoins();
-	public boolean trades(CryptoCoin cryptoCoin);
+	public String getCurrencyPair(String first ,String second);
+	public boolean isTradable(String cryptoCoin);
 	public BigDecimal getBtcPrice();
 	public BigDecimal getEthPrice();
 	
+	public String mapPortfolioCointoExchangeCoin(int number);
+	public HashMap<Integer, String> getExchangeCryptoCoin();
 
 }

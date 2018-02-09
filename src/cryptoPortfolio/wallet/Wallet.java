@@ -1,22 +1,12 @@
 package cryptoPortfolio.wallet;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import cryptoPortfolio.wallet.model.WalletPosition;
 
 public interface Wallet {
 	
-	
-	
-	
-	public void setName(String name);
-	public void addpositionToList(Position position);
-
 	public String getName();
-	public ArrayList<Position> getCryptoPositions();
-	
-	
-	// Methods
-
+	public ArrayList<WalletPosition> getPositionList();
 
 }

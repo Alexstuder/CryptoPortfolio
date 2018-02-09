@@ -1,14 +1,12 @@
-package cryptoPortfolio.wallet;
+package cryptoPortfolio;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
-import cryptoPortfolio.exchange.CryptoCoin;
 import cryptoPortfolio.exchange.Exchange;
-import cryptoPortfolio.exchange.MyExchanges;
+import cryptoPortfolio.wallet.Wallet;
+import cryptoPortfolio.wallet.MyEtherWallets.MyEtherWallet;
 
 public class MyWallets {
 
@@ -22,37 +20,6 @@ public class MyWallets {
 	public ArrayList<Wallet> getWallet() throws ParseException {
 
 		MyEtherWallet myEtherWallet = new MyEtherWallet();
-		myEtherWallet.setName("MyEtherWallet Alexstuder");
-
-		Position swissBorg = new Position();
-		swissBorg.setCryptoCoin(CryptoCoin.CHSB);
-		Date buyDate = new Date();
-		buyDate = dateformat.parse("2017-12-07");
-		swissBorg.setBuyDate(buyDate);
-		swissBorg.setBuyPrice(BigDecimal.valueOf(5000));
-		swissBorg.setQuantity(BigDecimal.valueOf(60500));
-
-		myEtherWallet.addpositionToList(swissBorg);
-
-		Position ethereum = new Position();
-		ethereum.setCryptoCoin(CryptoCoin.ETH);
-		buyDate = new Date();
-		buyDate = dateformat.parse("2017-12-14");
-		ethereum.setBuyDate(buyDate);
-		ethereum.setBuyPrice(BigDecimal.valueOf(73800));
-		ethereum.setQuantity(BigDecimal.valueOf(90));
-
-		myEtherWallet.addpositionToList(ethereum);
-
-		Position bitcoins = new Position();
-		bitcoins.setCryptoCoin(CryptoCoin.BTC);
-		buyDate = new Date();
-		buyDate = dateformat.parse("2013-12-14");
-		bitcoins.setBuyDate(buyDate);
-		bitcoins.setBuyPrice(BigDecimal.valueOf(600));
-		bitcoins.setQuantity(BigDecimal.valueOf(5));
-
-		myEtherWallet.addpositionToList(bitcoins);
 		myWallets.add(myEtherWallet);
 
 		return myWallets;
@@ -65,15 +32,14 @@ public class MyWallets {
 
 	}
 
-	public ArrayList<cryptoPortfolio.portfolio.Position> getRates(MyExchanges myExchanges) {
+	public ArrayList<cryptoPortfolio.portfolio.PortfolioPosition> getRates(MyExchanges myExchanges) {
 
-		ArrayList<cryptoPortfolio.portfolio.Position> positionsList = new ArrayList<cryptoPortfolio.portfolio.Position>();
+		ArrayList<cryptoPortfolio.portfolio.PortfolioPosition> positionsList = new ArrayList<cryptoPortfolio.portfolio.PortfolioPosition>();
 
 		for (Wallet wallet : myWallets) {
-			// Set the Name of the Wallet into Position
 
-			for (cryptoPortfolio.wallet.Position walletPosition : wallet.getCryptoPositions()) {
-				cryptoPortfolio.portfolio.Position position = new cryptoPortfolio.portfolio.Position();
+			for (cryptoPortfolio.wallet.model.WalletPosition walletPosition : wallet.getPositionList()) {
+				cryptoPortfolio.portfolio.PortfolioPosition position = new cryptoPortfolio.portfolio.PortfolioPosition();
 				position.setName(wallet.getName());
 
 				position.setCryptoCoin(walletPosition.getCryptoCoin());
@@ -81,28 +47,28 @@ public class MyWallets {
 				position.setQuantity(walletPosition.getQuantity());
 
 				for (Exchange exchange : myExchanges.getAllExchanges()) {
-					if (exchange.trades(walletPosition.getCryptoCoin())) {
+					if (exchange.isTradable(walletPosition.getCryptoCoin())) {
 						System.out.println("GetLast SellPrice for the Wallet Coin" + walletPosition.getCryptoCoin());
 
-						if (walletPosition.getCryptoCoin().toString().contains(CryptoCoin.BTC.toString())) {
+						if (walletPosition.getCryptoCoin().toString().contains("BTC")) {
 							position.setRateToBtc(BigDecimal.valueOf(1.0));
 						} else {
 							position.setRateToBtc(exchange.getLastSellPrice(
-									exchange.getCurrencyPair(walletPosition.getCryptoCoin(), CryptoCoin.BTC)));
+									exchange.getCurrencyPair(walletPosition.getCryptoCoin(), "BTC")));
 						}
 
-						if (walletPosition.getCryptoCoin().toString().contains(CryptoCoin.ETH.toString())) {
+						if (walletPosition.getCryptoCoin().toString().contains("ETH")) {
 							position.setRateToEth(BigDecimal.valueOf(1.0));
 						} else {
 							position.setRateToEth(exchange.getLastSellPrice(
-									exchange.getCurrencyPair(walletPosition.getCryptoCoin(), CryptoCoin.ETH)));
+									exchange.getCurrencyPair(walletPosition.getCryptoCoin(), "ETH")));
 						}
 
 						System.out.println("Set Price for EHT and BTC");
 
 						position.setPriceBtcUSD(position.getQuantity()
 								.multiply(position.getRateToBtc().multiply(exchange.getBtcPrice())));
-						if (walletPosition.getCryptoCoin().toString().contains(CryptoCoin.BTC.toString())) {
+						if (walletPosition.getCryptoCoin().toString().contains("BTC")) {
 							position.setPriceEthUSD(BigDecimal.valueOf(0));
 						} else {
 							position.setPriceEthUSD((position.getQuantity()

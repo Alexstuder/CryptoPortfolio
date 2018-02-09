@@ -1,7 +1,8 @@
-package cryptoPortfolio.exchange;
+package cryptoPortfolio;
 
 import java.util.ArrayList;
 
+import cryptoPortfolio.exchange.Exchange;
 import cryptoPortfolio.exchange.liveCoin.LiveCoin;
 
 public class MyExchanges {

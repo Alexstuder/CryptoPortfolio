@@ -4,78 +4,29 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.EnumSet;
 
 import javax.json.Json;
 import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParser.Event;
 
-import ch.alexstuder.livecoin.model.LiveCoinJson;
-import cryptoPortfolio.exchange.CryptoCoin;
-import cryptoPortfolio.exchange.Exchange;
+import cryptoPortfolio.crypotcoinlist.CryptoCoinList;
+import cryptoPortfolio.exchange.AbstractExchange;
+import cryptoPortfolio.exchange.liveCoin.model.LiveCoinJson;
 
-public class LiveCoin implements Exchange {
+public class LiveCoin extends AbstractExchange  {
 
-	public String name = "";
-	public URL url = null;
-	public EnumSet<CryptoCoinOnLiveCoin> allCryptoCoins = null;
-	public BigDecimal btcPrice;
-	public BigDecimal ethPrice;
-	private final static String LIVECOIN_URL = "https://api.livecoin.net//exchange/" ;
+	private final static String LIVECOIN_URL = "https://api.livecoin.net//exchange/";
+	private CryptoCoinOnLiveCoin coinOnLiveCoin = new CryptoCoinOnLiveCoin();
 
 	public LiveCoin() {
 
 		this.setName("LiveCoin");
 		this.setUrl(LIVECOIN_URL);
-        this.allCryptoCoins = getAllCryptoCoins();
-        this.btcPrice = getBtcPriceFromExchange();
-        this.ethPrice = getEthPriceFromExchange();
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name ;
-	}
-
-	@Override
-	public URL getUrl() {
-		return this.url;
-	}
-
-	@Override
-	public void setUrl(String url) {
-		try {
-			this.url = new URL(url);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public URL getURLLastTade(String currencyPair) {
-		URL functionLastTradeURL = null;
-		try {
-			functionLastTradeURL = new URL(this.getUrl().toString() + "last_trades?currencyPair=" + currencyPair);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return functionLastTradeURL;
-	}
-
-	@Override
-	public String getCurrencyPair(CryptoCoin first, CryptoCoin second) {
-		return first + "/" + second;
+		this.setExchangeCryptoCoin(coinOnLiveCoin.getCryptoCoinMap());
+		this.setBtcPrice(getBtcPriceFromExchange());
+		this.setEthPrice(getEthPriceFromExchange());
 	}
 
 	@Override
@@ -150,49 +101,47 @@ public class LiveCoin implements Exchange {
 			ex.printStackTrace();
 		}
 
-		//Just get the first Rate ; this is the Last traded Rate
+		// Just get the first Rate ; this is the Last traded Rate
 		if (coinList.isEmpty()) {
 			return null;
-		} else return coinList.get(0).getPrice();
+		} else
+			return coinList.get(0).getPrice();
 	}
 
 	@Override
-	public EnumSet<CryptoCoinOnLiveCoin> getAllCryptoCoins() {
-		 EnumSet<CryptoCoinOnLiveCoin> allCryptoCoins = EnumSet.allOf(CryptoCoinOnLiveCoin.class); 
-		 
-		return allCryptoCoins;
-	}
-
-	@Override
-	public boolean trades(CryptoCoin cryptoCoin) {
-		boolean trades = false ;
-		for (CryptoCoinOnLiveCoin cryptoCoinOnExchange : this.getAllCryptoCoins()) {
-			if (cryptoCoin.toString().contains(cryptoCoinOnExchange.toString())) {
+	public boolean isTradable(String cryptoCoin) {
+		boolean trades = false;
+		for (String cryptoCoinOnExchange : coinOnLiveCoin.getCryptoCoinMap().values()) {
+			if (cryptoCoin.toString().contains(cryptoCoinOnExchange)) {
 				trades = true;
 			}
-			
+
 		}
 		return trades;
 	}
 
-	@Override
-	public BigDecimal getBtcPrice() {
-		
-		return this.btcPrice;
+	public BigDecimal getBtcPriceFromExchange() {
+
+		return getLastSellPrice(getCurrencyPair(coinOnLiveCoin.getCryptoCoinMap().get(1) 
+				, coinOnLiveCoin.getCryptoCoinMap().get(0) ));
+	}
+
+	public BigDecimal getEthPriceFromExchange() {
+		return getLastSellPrice(getCurrencyPair(coinOnLiveCoin.getCryptoCoinMap().get(2) 
+				, coinOnLiveCoin.getCryptoCoinMap().get(0) ));
 	}
 
 	@Override
-	public BigDecimal getEthPrice() {
-		return this.ethPrice;
+	public String mapPortfolioCointoExchangeCoin(int number) {
+		return null;
 	}
-	
-	public BigDecimal getBtcPriceFromExchange() {
-		
-		return getLastSellPrice(getCurrencyPair(CryptoCoin.BTC, CryptoCoin.USD));
+
+	@Override
+	public String getCurrencyPair(String first, String second) {
+		return first + "/" + second;
 	}
-	
-	public BigDecimal getEthPriceFromExchange() {
-		return getLastSellPrice(getCurrencyPair(CryptoCoin.ETH, CryptoCoin.USD));
-	}
+
+
+
 
 }

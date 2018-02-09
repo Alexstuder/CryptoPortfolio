@@ -1,4 +1,4 @@
-package ch.alexstuder.livecoin.model;
+package cryptoPortfolio.exchange.liveCoin.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

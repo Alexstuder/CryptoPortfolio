@@ -1,21 +1,31 @@
-package cryptoPortfolio.wallet;
+package cryptoPortfolio.wallet.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import cryptoPortfolio.exchange.CryptoCoin;
+import cryptoPortfolio.crypotcoinlist.CryptoCoinList;
 
-public class Position {
+public class WalletPosition {
+
+	private Date buyDate;
+	private String cryptoCoin;
+	private BigDecimal quantity;
+	private BigDecimal buyPrice;	
+	
+	/*
+	 * Getter and Setter
+	 */
+	
 	public Date getBuyDate() {
 		return buyDate;
 	}
 	public void setBuyDate(Date buyDate) {
 		this.buyDate = buyDate;
 	}
-	public CryptoCoin getCryptoCoin() {
+	public String getCryptoCoin() {
 		return cryptoCoin;
 	}
-	public void setCryptoCoin(CryptoCoin cryptoCoin) {
+	public void setCryptoCoin(String cryptoCoin) {
 		this.cryptoCoin = cryptoCoin;
 	}
 	public BigDecimal getQuantity() {
@@ -30,9 +40,5 @@ public class Position {
 	public void setBuyPrice(BigDecimal buyPrice) {
 		this.buyPrice = buyPrice;
 	}
-	private Date buyDate;
-	private CryptoCoin cryptoCoin;
-	private BigDecimal quantity;
-    private BigDecimal buyPrice;	
 
 }

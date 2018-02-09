@@ -1,12 +1,13 @@
-package cryptoPortfolio.exchange.liveCoin;
+package cryptoPortfolio.wallet.MyEtherWallets;
 
 import cryptoPortfolio.crypotcoinlist.AbstractCryptoCoinList;
 
-public class CryptoCoinOnLiveCoin extends AbstractCryptoCoinList {
+public class MyEtherWalletCoinList extends AbstractCryptoCoinList {
 	
-	public CryptoCoinOnLiveCoin() {
-		// Get the tradeble CryptoList for LiveCoin
-		fillCryptoCoinList();
+	
+	public MyEtherWalletCoinList() {
+		// Get the Coinlist for MyEtherwallet
+	     fillCryptoCoinList();
 	}
 
 	@Override

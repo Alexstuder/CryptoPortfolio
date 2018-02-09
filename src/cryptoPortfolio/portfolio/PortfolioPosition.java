@@ -3,13 +3,13 @@ package cryptoPortfolio.portfolio;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import cryptoPortfolio.exchange.CryptoCoin;
+import cryptoPortfolio.crypotcoinlist.CryptoCoinList;
 
-public class Position {
+public class PortfolioPosition {
 	
 	private Date date;
 	private String Name ;
-	private CryptoCoin cryptoCoin;
+	private String cryptoCoin;
 	private BigDecimal quantity;
 	private BigDecimal rateToBtc;
     private BigDecimal priceBtcUSD;	
@@ -31,10 +31,10 @@ public class Position {
 	public void setName(String name) {
 		Name = name;
 	}
-	public CryptoCoin getCryptoCoin() {
+	public String getCryptoCoin() {
 		return cryptoCoin;
 	}
-	public void setCryptoCoin(CryptoCoin cryptoCoin) {
+	public void setCryptoCoin(String cryptoCoin) {
 		this.cryptoCoin = cryptoCoin;
 	}
 	public BigDecimal getQuantity() {
